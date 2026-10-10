@@ -1,0 +1,487 @@
+@import 'tailwindcss';
+
+/* ==================================================================
+   DESIGN TOKENS
+   Single source of truth for the visual system. Changing a value here
+   updates every component that consumes it.
+   ================================================================== */
+
+@theme {
+  /* ---- Colour ---- */
+  /* Primary — deep navy. Headers, hero, footer, key sections. */
+  --color-navy: #0b1f3a;
+  --color-navy-50: #f2f5f9;
+  --color-navy-100: #e2e8f0;
+  --color-navy-200: #c6d2e0;
+  --color-navy-300: #94a9c2;
+  --color-navy-400: #5b7a9c;
+  --color-navy-500: #33507a;
+  --color-navy-600: #0a1a30;
+  --color-navy-700: #081428;
+  --color-navy-800: #060f1f;
+  --color-navy-900: #040a16;
+  --color-navy-950: #02060d;
+
+  /* Secondary — royal blue. Links and interactive elements only. */
+  --color-blue: #174ea6;
+  --color-blue-50: #eff5fd;
+  --color-blue-100: #dae8fa;
+  --color-blue-200: #b9d2f3;
+  --color-blue-300: #8ab4e8;
+  --color-blue-400: #528cd6;
+  --color-blue-500: #174ea6;
+  --color-blue-600: #123f87;
+  --color-blue-700: #0e316b;
+  --color-blue-800: #0a234a;
+  --color-blue-900: #07172f;
+
+  /* Accent — academic gold. Used sparingly: badges, accents, highlights. */
+  --color-gold: #d4a72c;
+  --color-gold-light: #e8c55c;
+  --color-gold-dark: #b4881a;
+
+  /* Surfaces & text */
+  --color-canvas: #f8fafc;
+  --color-ink: #111827;
+  --color-ink-muted: #64748b;
+  --color-border: #e5e9f0;
+
+  /* ---- Typography ---- */
+  --font-sans: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-display: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif;
+
+  /* Fluid display sizes — clamp() keeps headings readable from 320px up
+     without a separate mobile scale. */
+  --text-display-xl: clamp(2.25rem, 1.5rem + 3.5vw, 4.5rem);
+  --text-display-xl--line-height: 1.05;
+  --text-display-xl--letter-spacing: -0.03em;
+  --text-display-xl--font-weight: 800;
+
+  --text-display-lg: clamp(1.875rem, 1.4rem + 2.2vw, 3.25rem);
+  --text-display-lg--line-height: 1.12;
+  --text-display-lg--letter-spacing: -0.02em;
+  --text-display-lg--font-weight: 700;
+
+  --text-display-md: clamp(1.5rem, 1.2rem + 1.4vw, 2.25rem);
+  --text-display-md--line-height: 1.2;
+  --text-display-md--letter-spacing: -0.015em;
+  --text-display-md--font-weight: 700;
+
+  --text-display-sm: clamp(1.1875rem, 1.1rem + 0.4vw, 1.5rem);
+  --text-display-sm--line-height: 1.3;
+  --text-display-sm--letter-spacing: -0.01em;
+  --text-display-sm--font-weight: 700;
+
+  /* ---- Spacing ---- */
+  --spacing-section: clamp(3.5rem, 2rem + 6vw, 7rem);
+  --spacing-section-sm: clamp(2.5rem, 1.5rem + 4vw, 4.5rem);
+
+  /* ---- Layout ---- */
+  --container-container: 80rem;
+  --container-prose: 68ch;
+
+  /* ---- Elevation ----
+     A restrained, mostly single-soft-shadow scale. Premium surfaces read as
+     barely lifted off the page rather than as heavily embossed panels, so the
+     ambient layer stays very low-opacity and the spreads stay tight. */
+  --shadow-card: 0 1px 2px 0 rgb(11 31 58 / 0.04), 0 4px 16px -8px rgb(11 31 58 / 0.08);
+  --shadow-card-hover: 0 2px 4px 0 rgb(11 31 58 / 0.05), 0 12px 32px -14px rgb(11 31 58 / 0.14);
+  --shadow-nav: 0 1px 2px 0 rgb(11 31 58 / 0.04), 0 8px 24px -14px rgb(11 31 58 / 0.10);
+  /* The deepest lift, reserved for a card that has left the grid and become the
+     subject: the portal chooser tiles and the campus photo cards on hover. */
+  --shadow-float: 0 2px 6px -3px rgb(11 31 58 / 0.06),
+    0 16px 40px -18px rgb(11 31 58 / 0.16);
+
+  /* ---- Motion ---- */
+  --ease-premium: cubic-bezier(0.22, 1, 0.36, 1);
+
+  --animate-fade-up: fade-up 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+  --animate-fade-in: fade-in 0.6s ease-out both;
+  --animate-scale-in: scale-in 0.3s cubic-bezier(0.22, 1, 0.36, 1) both;
+  --animate-scroll-hint: scroll-hint 2.2s ease-in-out infinite;
+
+  @keyframes fade-up {
+    from {
+      opacity: 0;
+      transform: translate3d(0, 16px, 0);
+    }
+    to {
+      opacity: 1;
+      transform: translate3d(0, 0, 0);
+    }
+  }
+
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes scale-in {
+    from {
+      opacity: 0;
+      transform: scale(0.96);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  @keyframes scroll-hint {
+    0%,
+    100% {
+      transform: translateY(0);
+      opacity: 0.55;
+    }
+    50% {
+      transform: translateY(6px);
+      opacity: 1;
+    }
+  }
+
+  /* Accordion open/close height animation.
+     `grid-template-rows` is used rather than `height` so the panel can size
+     itself to content of any length, which a fixed max-height cannot do. */
+  --animate-accordion-down: accordion-down 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+  --animate-accordion-up: accordion-up 0.24s cubic-bezier(0.22, 1, 0.36, 1);
+
+  @keyframes accordion-down {
+    from {
+      height: 0;
+      opacity: 0;
+    }
+    to {
+      height: var(--radix-accordion-content-height);
+      opacity: 1;
+    }
+  }
+
+  @keyframes accordion-up {
+    from {
+      height: var(--radix-accordion-content-height);
+      opacity: 1;
+    }
+    to {
+      height: 0;
+      opacity: 0;
+    }
+  }
+
+  /* Mobile drawer slides down from the top bar it is attached to. */
+  --animate-drawer-down: drawer-down 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+  --animate-drawer-up: drawer-up 0.22s cubic-bezier(0.22, 1, 0.36, 1);
+
+  @keyframes drawer-down {
+    from {
+      opacity: 0;
+      transform: translate3d(0, -1.5rem, 0);
+    }
+    to {
+      opacity: 1;
+      transform: translate3d(0, 0, 0);
+    }
+  }
+
+  @keyframes drawer-up {
+    from {
+      opacity: 1;
+      transform: translate3d(0, 0, 0);
+    }
+    to {
+      opacity: 0;
+      transform: translate3d(0, -1rem, 0);
+    }
+  }
+}
+
+/* ==================================================================
+   BASE
+   ================================================================== */
+
+@layer base {
+  :root {
+    /* Height of the fixed navbar, used to offset in-page anchors. */
+    --nav-offset: 5.5rem;
+
+    /* ------------------------------------------------------------------
+       Semantic tokens for shadcn/ui + Radix primitives.
+
+       The components imported from shadcn are written against a semantic
+       layer (`bg-background`, `text-muted-foreground`, `border-input`, …)
+       rather than raw palette names. Mapping that layer onto this project's
+       navy/gold system is what lets shadcn components inherit the school
+       branding instead of dragging in a generic grey-and-blue default theme.
+
+       Deliberately NOT mapped to `--color-border`: `--color-border` has been
+       removed from cards site-wide, so the semantic `border-input` below is
+       reserved for genuine form controls where a hairline is correct.
+       ------------------------------------------------------------------ */
+    --background: var(--color-canvas);
+    --foreground: var(--color-ink);
+    --card: #ffffff;
+    --card-foreground: var(--color-ink);
+    --popover: #ffffff;
+    --popover-foreground: var(--color-ink);
+
+    --primary: var(--color-navy);
+    --primary-foreground: #ffffff;
+    --secondary: var(--color-navy-50);
+    --secondary-foreground: var(--color-navy);
+
+    --muted: var(--color-navy-50);
+    --muted-foreground: var(--color-ink-muted);
+
+    --accent: var(--color-gold);
+    --accent-foreground: var(--color-navy-900);
+
+    --destructive: #b42318;
+    --destructive-foreground: #ffffff;
+
+    --input: #dfe5ee;
+    --ring: var(--color-blue);
+
+    --radius: 0.875rem;
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+    scroll-padding-top: var(--nav-offset);
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-canvas font-sans text-ink antialiased;
+    text-rendering: optimizeLegibility;
+    /* Guards against horizontal overflow on 320px screens. */
+    overflow-x: hidden;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-display text-navy;
+    /* Avoids orphaned words on the final line. */
+    text-wrap: balance;
+  }
+
+  p {
+    @apply leading-relaxed text-ink-muted;
+    text-wrap: pretty;
+  }
+
+  /* Consistent focus ring for keyboard users only. */
+  :focus-visible {
+    @apply outline-none ring-2 ring-blue ring-offset-2 ring-offset-white;
+  }
+
+  /* Dark surfaces need a light ring to stay visible. */
+  .on-dark :focus-visible {
+    @apply ring-white ring-offset-navy;
+  }
+
+  ::selection {
+    @apply bg-gold/25 text-navy;
+  }
+
+  /* Honour the OS-level reduced-motion preference site-wide. Framer Motion
+     animations are handled separately via useReducedMotion(). */
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+/* ==================================================================
+   COMPONENT PRIMITIVES
+   ================================================================== */
+
+@layer components {
+  .container-page {
+    @apply mx-auto w-full max-w-container px-5 sm:px-6 lg:px-8;
+  }
+
+  .section {
+    @apply py-section-sm md:py-section;
+  }
+
+  /* Small uppercase label above section headings. */
+  .eyebrow {
+    @apply mb-3 inline-flex items-center text-xs font-semibold uppercase tracking-[0.14em] text-gold-dark;
+  }
+
+  .eyebrow-light {
+    @apply text-gold-light;
+  }
+
+  .gold-rule {
+    @apply block h-1 w-14 rounded-full bg-gold;
+  }
+
+  /* ---- Cards ---- */
+
+  /* ---- Forms ---- */
+  .field-label {
+    @apply mb-1.5 block text-sm font-medium text-navy;
+  }
+
+  .field-control {
+    @apply w-full rounded-lg border border-border bg-white px-4 py-3 text-base text-ink
+           transition-colors duration-200 placeholder:text-ink-muted/70
+           hover:border-navy-200
+           focus:border-blue focus:ring-2 focus:ring-blue/20 focus:outline-none
+           disabled:cursor-not-allowed disabled:bg-canvas disabled:text-ink-muted;
+  }
+
+  .field-control[aria-invalid='true'] {
+    @apply border-red-400 focus:border-red-500 focus:ring-red-500/20;
+  }
+
+  /* Borderless form control.
+     The sign-in forms draw no 1px lines at all. A row of outlined boxes reads
+     as a wireframe and, on the login pages, the eye got stuck on the boxes
+     instead of reading the labels. Separation now comes from a soft tint fill,
+     and the control only grows a ring while it has focus — so the resting
+     state is calm and the active state is unmistakable.
+     `ring` rather than `border` for focus: switching to a ring does not change
+     the box size, so nothing shifts when a field is tabbed into. */
+  .field-control-flat {
+    @apply w-full rounded-xl border-0 bg-navy-50/70 px-4 py-3 text-base text-ink
+           transition-[background-color,box-shadow] duration-200
+           placeholder:text-ink-muted/70
+           hover:bg-navy-50
+           focus:bg-white focus:ring-2 focus:ring-blue/35 focus:outline-none
+           disabled:cursor-not-allowed disabled:text-ink-muted;
+  }
+
+  .field-control-flat[aria-invalid='true'] {
+    @apply bg-red-50 focus:ring-red-400/35;
+  }
+
+  /* Native select needs an explicit chevron; the OS arrow is hidden. */
+  .field-select {
+    @apply cursor-pointer appearance-none bg-no-repeat pr-10;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%2364748B'%3E%3Cpath fill-rule='evenodd' d='M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z' clip-rule='evenodd'/%3E%3C/svg%3E");
+    background-position: right 0.75rem center;
+    background-size: 1.25rem 1.25rem;
+  }
+
+  /* Visible only once focused. */
+  .skip-link {
+    @apply sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-100
+           focus:rounded-lg focus:bg-navy focus:px-5 focus:py-3 focus:text-sm
+           focus:font-semibold focus:text-white focus:shadow-lg;
+  }
+}
+
+/* ==================================================================
+   UTILITIES
+   ================================================================== */
+
+@utility no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@utility text-pretty {
+  text-wrap: pretty;
+}
+
+/* ---- Card surfaces ----
+   Defined as utilities (not @layer components) so that other utilities and
+   variants can @apply them.
+
+   These are deliberately FLAT and BORDERLESS. A grid of cards each outlined
+   with a 1px line, or each carrying a white-to-grey tint gradient, reads as a
+   wireframe or a template; a clean white surface with one soft shadow is the
+   calmer, more premium treatment. Separation comes from the shadow and the
+   grid gap alone, so no hairline and no fill gradient are needed. */
+@utility card-base {
+  @apply rounded-2xl bg-white shadow-lift transition-all duration-300;
+}
+
+@utility card-interactive {
+  @apply card-base hover:-translate-y-1 hover:shadow-lift-lg;
+}
+
+/* Cards sitting directly on the navy background, e.g. inside a dark band.
+   Lightened surface, soft light shadow rather than a dark drop shadow, which
+   would disappear against navy. */
+@utility card-on-dark {
+  @apply rounded-2xl bg-white/[0.06] shadow-[0_1px_0_0_rgb(255_255_255/0.08),0_18px_40px_-24px_rgb(0_0_0/0.6)] transition-all duration-300;
+}
+
+/* ---- Premium elevation ----
+   One soft ambient shadow plus a tight contact shadow. The `shadow-lift` is the
+   resting state; `shadow-lift-lg` is the hover/emphasis state, only modestly
+   deeper so a hover never jumps in weight. */
+@utility shadow-lift {
+  @apply shadow-[0_1px_2px_rgb(11_31_58/0.04),0_6px_20px_-8px_rgb(11_31_58/0.10)];
+}
+
+@utility shadow-lift-lg {
+  @apply shadow-[0_2px_4px_rgb(11_31_58/0.05),0_14px_36px_-14px_rgb(11_31_58/0.16)];
+}
+
+/* ==================================================================
+   PRINT
+   The AI tools are the only pages that print, and they print a single
+   artefact: a generated paper (optionally with its answer key). Site
+   chrome, the form and the toolbars are marked `print:hidden` at the
+   call site, so this block only has to set the page box and flatten the
+   paper's on-screen card styling.
+   ================================================================== */
+
+@page {
+  size: A4;
+  margin: 16mm;
+}
+
+@media print {
+  html,
+  body {
+    background: #fff;
+  }
+
+  /* Keep the paper's navy headings and rules rather than letting the
+     browser drop backgrounds. */
+  body {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* On paper the artefact fills the printable width instead of sitting in
+     the screen's rounded, shadowed card. */
+  .print-area {
+    max-width: none !important;
+    margin: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+  }
+
+  /* Keep a question and its options together rather than splitting a
+     multiple-choice item across a page break. */
+  .print-area li,
+  .print-area section {
+    break-inside: avoid;
+  }
+}
